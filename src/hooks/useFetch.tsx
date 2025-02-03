@@ -4,6 +4,7 @@ export const useFetch = <T,>(url: string) => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isFetched, setIsFetched] = useState<boolean>(false);
   const abortController = new AbortController();
 
   useEffect(() => {
@@ -16,6 +17,7 @@ export const useFetch = <T,>(url: string) => {
         }
         const result: T = await response.json();
         setData(result);
+        setIsFetched(true);
       } catch (error) {
         setError((error as Error).message);
       } finally {
@@ -33,5 +35,5 @@ export const useFetch = <T,>(url: string) => {
     abortController.abort();
   };
 
-  return { data, loading, error, reject };
+  return { data, loading, error, isFetched, reject };
 };
