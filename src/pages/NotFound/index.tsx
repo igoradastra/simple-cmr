@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { UserDetail } from './UserDetail';
 
-export const UserDetailPage = () => {
+export const NotFoundPage = () => {
   return (
     <main
       style={{
@@ -9,8 +8,7 @@ export const UserDetailPage = () => {
         textAlign: 'center',
       }}
     >
-      <h1 style={{ fontSize: '1.8em', color: '#333', marginBottom: '15px' }}>User Detail Page</h1>
-      <UserDetail />
+      <h1 style={{ fontSize: '1.8em', color: '#333', marginBottom: '15px' }}>404 - Page Not Found</h1>
       <Link to="/users" style={{ display: 'block', marginTop: '20px' }}>
         {'<- Back'}
       </Link>

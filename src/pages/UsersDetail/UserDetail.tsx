@@ -1,9 +1,17 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import { useFetch } from '../../hooks/useFetch';
+import { User } from '../Users/types/Users';
 
 export const UserDetail = () => {
   const location = useLocation();
-  const { user } = location.state || {};
+  const { user: initialUser } = location.state || {};
+  const { id } = useParams();
+  const { data: fetchedUser, loading, error } = useFetch<User>(`https://jsonplaceholder.typicode.com/users/${id}`);
 
+  const user = initialUser ?? fetchedUser;
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   if (!user) return <section className="user-not-found">User not found</section>;
 
   return (

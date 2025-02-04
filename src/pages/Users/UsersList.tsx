@@ -31,7 +31,7 @@ export const UsersList = () => {
                 borderRadius: '8px',
               }}
             >
-              <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Link to={`/user/${user.id}`} state={{ user, data }} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <strong>{user.name}</strong>
               </Link>
             </li>
