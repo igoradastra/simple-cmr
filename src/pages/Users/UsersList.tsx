@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useFetch } from '../../hooks/useFetch';
 import { User } from './types/Users';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,8 @@ export const UsersList = () => {
     return () => reject();
   }, [reject]);
 
+  const users = useMemo(() => data ?? [], [data]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -20,7 +22,7 @@ export const UsersList = () => {
       </header>
       {isFetched && (
         <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(15rem, 1fr))', gap: '1rem' }}>
-          {data?.map((user) => (
+          {users?.map((user) => (
             <li
               key={user.id}
               style={{
@@ -31,7 +33,7 @@ export const UsersList = () => {
                 borderRadius: '8px',
               }}
             >
-              <Link to={`/user/${user.id}`} state={{ user, data }} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <strong>{user.name}</strong>
               </Link>
             </li>

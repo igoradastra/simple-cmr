@@ -1,16 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const useFetch = <T,>(url: string) => {
+export const useFetch = <T,>(url: string, options?: { skip?: boolean }) => {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(!options?.skip);
   const [error, setError] = useState<string | null>(null);
   const [isFetched, setIsFetched] = useState<boolean>(false);
-  const abortController = new AbortController();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (options?.skip) {
+      setLoading(false);
+      return;
+    }
+
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
     const { signal } = abortController;
     const fetchData = async () => {
       try {
@@ -36,10 +43,12 @@ export const useFetch = <T,>(url: string) => {
     return () => {
       abortController.abort();
     };
-  }, [url]);
+  }, [navigate, options?.skip, url]);
 
   const reject = () => {
-    abortController.abort();
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
   };
 
   return { data, loading, error, isFetched, reject };
