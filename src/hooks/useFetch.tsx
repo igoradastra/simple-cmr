@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const useFetch = <T,>(url: string, options?: { skip?: boolean }) => {
+export const useFetch = <T,>(url: string, options?: { enabled?: boolean }) => {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(!options?.skip);
+  const [loading, setLoading] = useState<boolean>(!options?.enabled);
   const [error, setError] = useState<string | null>(null);
   const [isFetched, setIsFetched] = useState<boolean>(false);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -11,7 +11,7 @@ export const useFetch = <T,>(url: string, options?: { skip?: boolean }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (options?.skip) {
+    if (options?.enabled) {
       setLoading(false);
       return;
     }
@@ -23,8 +23,7 @@ export const useFetch = <T,>(url: string, options?: { skip?: boolean }) => {
       try {
         const response = await fetch(url, { signal });
         if (response.status === 404) {
-          navigate('/404');
-          return;
+          throw new Error('404 - Page not found');
         }
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -43,7 +42,7 @@ export const useFetch = <T,>(url: string, options?: { skip?: boolean }) => {
     return () => {
       abortController.abort();
     };
-  }, [navigate, options?.skip, url]);
+  }, [navigate, options?.enabled, url]);
 
   const reject = () => {
     if (abortControllerRef.current) {

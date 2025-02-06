@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UsersList } from './Users/UsersList';
 import { UserDetailPage } from './UsersDetail';
-import { NotFoundPage } from './NotFound';
+import { NotFound } from './NotFound';
 
 export const PagesRouter = () => {
   return (
@@ -10,7 +10,7 @@ export const PagesRouter = () => {
         <Route path="/" element={<Navigate to="/users" />} />
         <Route path="/users" element={<UsersList />} />
         <Route path="/user/:id" element={<UserDetailPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

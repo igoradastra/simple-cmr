@@ -11,7 +11,7 @@ export const UserDetail = () => {
     data: fetchedUser,
     loading,
     error,
-  } = useFetch<User>(`https://jsonplaceholder.typicode.com/users/${id}`, { skip: !!initialUser });
+  } = useFetch<User>(`https://jsonplaceholder.typicode.com/users/${id}`, { enabled: !!initialUser });
 
   const user = initialUser ?? fetchedUser;
 
