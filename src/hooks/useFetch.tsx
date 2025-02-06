@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export const useFetch = <T,>(url: string, options?: { enabled?: boolean }) => {
   const [data, setData] = useState<T | null>(null);
@@ -8,17 +7,16 @@ export const useFetch = <T,>(url: string, options?: { enabled?: boolean }) => {
   const [isFetched, setIsFetched] = useState<boolean>(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (options?.enabled) {
       setLoading(false);
       return;
     }
 
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
-    const { signal } = abortController;
+    if (!abortControllerRef.current) {
+      abortControllerRef.current = new AbortController();
+    }
+    const { signal } = abortControllerRef.current;
     const fetchData = async () => {
       try {
         const response = await fetch(url, { signal });
@@ -40,14 +38,14 @@ export const useFetch = <T,>(url: string, options?: { enabled?: boolean }) => {
     fetchData();
 
     return () => {
-      abortController.abort();
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = null;
     };
-  }, [navigate, options?.enabled, url]);
+  }, [options?.enabled, url]);
 
   const reject = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
   };
 
   return { data, loading, error, isFetched, reject };
