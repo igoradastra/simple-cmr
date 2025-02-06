@@ -1,6 +1,18 @@
 import { useLocation, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { User } from '../Users/types/Users';
-import { useFetch } from '../../hooks/useFetch';
+
+const fetchUser = async (id: string): Promise<User> => {
+  const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+
+  if (!response.ok) {
+    const errorMessage = response.status === 404 ? '404 - User not found' : `HTTP error! Status: ${response.status}`;
+
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
+};
 
 export const UserDetail = () => {
   const location = useLocation();
@@ -9,17 +21,21 @@ export const UserDetail = () => {
 
   const {
     data: fetchedUser,
-    loading,
+    isLoading,
     error,
-  } = useFetch<User>(`https://jsonplaceholder.typicode.com/users/${id}`, { enabled: !!initialUser });
+  } = useQuery({
+    queryKey: ['user', id],
+    queryFn: () => fetchUser(id as string),
+    enabled: !!id && !initialUser,
+  });
 
   const user = initialUser ?? fetchedUser;
 
   switch (true) {
-    case !initialUser && loading:
+    case !initialUser && isLoading:
       return <p>Loading...</p>;
     case !initialUser && Boolean(error):
-      return <p>Error: {error}</p>;
+      return <p>Error: {error?.toString()}</p>;
     case !user:
       return <section className="user-not-found">User not found</section>;
     default:

@@ -1,17 +1,26 @@
-import { useEffect } from 'react';
-import { useFetch } from '../../hooks/useFetch';
 import { User } from './types/Users';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
+const fetchUsers = async (): Promise<User[]> => {
+  const response = await fetch('https://jsonplaceholder.typicode.com/users');
+  if (!response.ok) throw new Error('Network response was not ok');
+  return response.json();
+};
 
 export const UsersList = () => {
-  const { data, loading, error, reject, isFetched } = useFetch<User[]>('https://jsonplaceholder.typicode.com/users');
+  const {
+    data: users,
+    isLoading,
+    error,
+    isFetched,
+  } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  });
 
-  useEffect(() => {
-    return () => reject();
-  }, [reject]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <>
@@ -20,7 +29,7 @@ export const UsersList = () => {
       </header>
       {isFetched && (
         <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(15rem, 1fr))', gap: '1rem' }}>
-          {data?.map((user) => (
+          {users?.map((user) => (
             <li
               key={user.id}
               style={{
