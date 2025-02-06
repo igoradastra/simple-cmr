@@ -15,11 +15,9 @@ export const UserDetail = () => {
 
   const user = initialUser ?? fetchedUser;
 
-  if (!initialUser) {
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-    if (!user) return <section className="user-not-found">User not found</section>;
-  }
+  if (!initialUser && loading) return <p>Loading...</p>;
+  if (!initialUser && error) return <p>Error: {error}</p>;
+  if (!user) return <section className="user-not-found">User not found</section>;
 
   return (
     <section

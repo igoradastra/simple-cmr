@@ -12,7 +12,7 @@ export const UserDetailPage = () => {
       <h1 style={{ fontSize: '1.8em', color: '#333', marginBottom: '15px' }}>User Detail Page</h1>
       <UserDetail />
       <Link to="/users" style={{ display: 'block', marginTop: '20px' }}>
-        {'<- Back'}
+        {'<- Show all users'}
       </Link>
     </main>
   );
