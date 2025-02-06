@@ -10,7 +10,7 @@ export const NotFound = () => {
     >
       <h1 style={{ fontSize: '1.8em', color: '#333', marginBottom: '15px' }}>404 - Page Not Found</h1>
       <Link to="/users" style={{ display: 'block', marginTop: '20px' }}>
-        {'<- Show all users'}
+        &lt;- Show all users
       </Link>
     </main>
   );
