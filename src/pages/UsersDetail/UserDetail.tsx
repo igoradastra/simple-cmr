@@ -2,8 +2,6 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchUser } from '../../utils/getUsersData';
 
-
-
 export const UserDetail = () => {
   const location = useLocation();
   const { user: initialUser } = location.state || {};
