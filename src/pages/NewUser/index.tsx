@@ -5,7 +5,7 @@ export const NewUserPage = () => {
   return (
     <>
       <NewUser />{' '}
-      <Link to="/users" style={{ display: 'block', marginTop: '20px', marginLeft: '150px' }}>
+      <Link to="/users" style={{ display: 'block', marginTop: '20px', marginLeft: '170px' }}>
         Show all users
       </Link>
     </>

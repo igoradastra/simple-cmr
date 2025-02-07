@@ -33,20 +33,20 @@ export const NewUser = () => {
         marginLeft: '80px',
         marginTop: '20px',
         border: '1px solid #ccc',
-        padding: '1rem',
+        padding: '2rem',
         borderRadius: '8px',
       }}
     >
       <div style={{ marginBottom: '1rem' }}>
         <label style={{ display: 'block' }}>
           Name:
-          <input type="text" {...register('name')} required style={{ width: '100%' }} />
+          <input type="text" {...register('name')} required style={{ width: '100%', height: '20px' }} />
         </label>
       </div>
       <div style={{ marginBottom: '1rem' }}>
         <label style={{ display: 'block' }}>
           Email:
-          <input type="email" {...register('email')} required style={{ width: '100%' }} />
+          <input type="email" {...register('email')} required style={{ width: '100%', height: '20px' }} />
         </label>
       </div>
       <button

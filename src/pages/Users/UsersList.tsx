@@ -1,12 +1,7 @@
-import { User } from './types/Users';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { fetchUsers } from '../../utils/getUsersData';
 
-const fetchUsers = async (): Promise<User[]> => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/users');
-  if (!response.ok) throw new Error('Network response was not ok');
-  return response.json();
-};
 
 export const UsersList = () => {
   const {

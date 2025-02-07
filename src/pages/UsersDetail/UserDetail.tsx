@@ -1,18 +1,8 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { User } from '../Users/types/Users';
+import { fetchUser } from '../../utils/getUsersData';
 
-const fetchUser = async (id: string): Promise<User> => {
-  const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
 
-  if (!response.ok) {
-    const errorMessage = response.status === 404 ? '404 - User not found' : `HTTP error! Status: ${response.status}`;
-
-    throw new Error(errorMessage);
-  }
-
-  return response.json();
-};
 
 export const UserDetail = () => {
   const location = useLocation();
