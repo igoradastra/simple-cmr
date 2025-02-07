@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import { ApiError } from '../../errors/apiErrors';
 
 export const NewUser = () => {
   const { register, handleSubmit, reset } = useForm();
@@ -12,7 +13,7 @@ export const NewUser = () => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error('Failed to create user');
+        throw new ApiError('Failed to create user', response.status);
       }
       return response.json();
     },

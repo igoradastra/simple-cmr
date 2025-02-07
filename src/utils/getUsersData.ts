@@ -1,12 +1,15 @@
+import { ApiError } from '../errors/apiErrors';
+import { NotFoundError } from '../errors/notFoundErrors';
 import { User } from '../pages/Users/types/Users';
 
 const fetchData = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
 
   if (!response.ok) {
-    const errorMessage =
-      response.status === 404 ? '404 - Resource not found' : `HTTP error! Status: ${response.status}`;
-    throw new Error(errorMessage);
+    if (response.status === 404) {
+      throw new NotFoundError('404 - Page not found');
+    }
+    throw new ApiError(`HTTP error! Status: ${response.status}`, response.status);
   }
 
   return response.json();
