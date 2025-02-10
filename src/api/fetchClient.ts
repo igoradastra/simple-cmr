@@ -1,8 +1,7 @@
 import { ApiError } from '../errors/apiErrors';
 import { NotFoundError } from '../errors/notFoundErrors';
-import { User } from '../pages/Users/types/Users';
 
-const fetchData = async <T>(url: string): Promise<T> => {
+export const fetchClient = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -14,6 +13,3 @@ const fetchData = async <T>(url: string): Promise<T> => {
 
   return response.json();
 };
-
-export const fetchUser = (id: string) => fetchData<User>(`https://jsonplaceholder.typicode.com/users/${id}`);
-export const fetchUsers = () => fetchData<User[]>('https://jsonplaceholder.typicode.com/users');

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { fetchUsers } from '../../utils/getUsersData';
+import { getUsers } from '../../api/usersApi';
 
 export const UsersList = () => {
   const {
@@ -10,7 +10,7 @@ export const UsersList = () => {
     isFetched,
   } = useQuery({
     queryKey: ['users'],
-    queryFn: fetchUsers,
+    queryFn: getUsers,
   });
 
   if (isLoading) return <p>Loading...</p>;
