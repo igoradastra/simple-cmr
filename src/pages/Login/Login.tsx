@@ -7,7 +7,7 @@ import { InputField } from '../../components/InputField';
 
 const loginSchema = z.object({
   name: z.string().min(1, 'Username is required'),
-  email: z.string().email('Invalid email'),
+  password: z.string().min(4, 'Password is required'),
 });
 
 export const Login = () => {
@@ -18,7 +18,7 @@ export const Login = () => {
     defaultValues: { name: '', email: '', password: '' },
   });
 
-  const onSubmit = (data: { name: string; email: string }) => {
+  const onSubmit = (data: { name: string; password: string }) => {
     login(data.name);
     navigate('/users');
   };
