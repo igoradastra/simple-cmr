@@ -44,6 +44,7 @@ export const NewUser = () => {
         borderRadius: '8px',
       }}
     >
+      <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Add new user</h2>
       <InputField name="name" control={control} label="Name" type="text" />
       <InputField name="email" control={control} label="Email" type="email" />
       <button

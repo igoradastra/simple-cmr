@@ -1,18 +1,21 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { UsersList } from './UsersList';
 import { useAuth } from '../../context/useAuth';
+import { useEffect } from 'react';
 
 export const Users = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  if (!user) {
-    navigate('/');
-    return null;
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
   return (
     <>
-      <div
+      <header
         style={{
           display: 'flex',
           justifyContent: 'flex-end',
@@ -25,8 +28,8 @@ export const Users = () => {
         <Link to="/login" onClick={logout} style={{ textDecoration: 'underline' }}>
           Logout
         </Link>
-      </div>
-      <UsersList />{' '}
+      </header>
+      <UsersList />
       <Link to="/new-user" style={{ display: 'block', marginLeft: '40px' }}>
         Add new user
       </Link>
