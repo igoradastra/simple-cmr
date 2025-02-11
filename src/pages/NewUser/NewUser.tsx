@@ -5,7 +5,7 @@ import { ApiError } from '../../errors/apiErrors';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const schema = z.object({
-  name: z.string().min(4, 'Name is required'),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
 });
 
