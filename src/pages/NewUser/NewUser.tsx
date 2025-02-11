@@ -1,8 +1,9 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ApiError } from '../../errors/apiErrors';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { InputField } from '../../components/InputField';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -43,28 +44,8 @@ export const NewUser = () => {
         borderRadius: '8px',
       }}
     >
-      <label style={{ display: 'block' }}>Name:</label>
-      <Controller
-        name="name"
-        control={control}
-        render={({ field, fieldState }) => (
-          <>
-            <input {...field} type="text" style={{ width: '100%', height: '20px' }} />
-            {fieldState.error && <p style={{ color: 'red', margin: '0 0 4px 0' }}>{fieldState.error.message}</p>}
-          </>
-        )}
-      />
-      <label style={{ display: 'block', marginTop: '1rem' }}>Email:</label>
-      <Controller
-        name="email"
-        control={control}
-        render={({ field, fieldState }) => (
-          <>
-            <input {...field} type="email" style={{ width: '100%', height: '20px' }} />
-            {fieldState.error && <p style={{ color: 'red', margin: '0 0 4px 0' }}>{fieldState.error.message}</p>}
-          </>
-        )}
-      />
+      <InputField name="name" control={control} label="Name" type="text" />
+      <InputField name="email" control={control} label="Email" type="email" />
       <button
         type="submit"
         disabled={mutation.isPending}
