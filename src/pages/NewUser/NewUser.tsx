@@ -13,7 +13,7 @@ const schema = z.object({
 export const NewUser = () => {
   const { control, handleSubmit, reset } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', email: '' },
+    defaultValues: { name: '', email: '', password: '' },
   });
 
   const mutation = useMutation({

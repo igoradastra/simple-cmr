@@ -1,8 +1,8 @@
 import { Control, Controller } from 'react-hook-form';
 
 type InputFieldProps = {
-  name: 'name' | 'email';
-  control: Control<{ name: string; email: string }>;
+  name: 'name' | 'email' | 'password';
+  control: Control<{ name: string; email: string; password: string }>;
   label: string;
   type: string;
 };
