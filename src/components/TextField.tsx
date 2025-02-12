@@ -21,8 +21,10 @@ export const TextField = <T extends FieldValues>({ name, control, label, type }:
 
   return (
     <fieldset style={{ border: 'none', margin: '0', padding: '0' }}>
-      <label style={{ display: 'block', marginLeft: '5px', marginTop: '1rem' }}>{label}:</label>
-      <input {...field} type={type} style={{ marginLeft: '5px', height: '20px' }} />
+      <label htmlFor={field.name} style={{ display: 'block', marginLeft: '5px', marginTop: '1rem' }}>
+        {label}:
+      </label>
+      <input {...field} id={field.name} type={type} style={{ marginLeft: '5px', height: '20px' }} />
       {error && <p style={{ color: 'red', margin: '0 0 4px 0' }}>{error.message}</p>}
     </fieldset>
   );
