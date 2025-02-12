@@ -9,7 +9,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   const login = (username: string) => setUser(username);
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null);
+    window.location.reload();
+  };
 
   return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
 };

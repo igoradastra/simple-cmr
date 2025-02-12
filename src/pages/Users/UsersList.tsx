@@ -3,7 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { getUsers } from '../../api/usersApi';
 
 export const UsersList = () => {
-  const { data: users, isLoading, error } = useQuery({ queryKey: ['users'], queryFn: getUsers });
+  const {
+    data: users,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['users'],
+    queryFn: getUsers,
+    enabled: !!localStorage.getItem('user'),
+  });
 
   switch (true) {
     case isLoading:
