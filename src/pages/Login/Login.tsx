@@ -23,14 +23,14 @@ export const Login = () => {
     defaultValues: { name: '', password: '' },
   });
 
-  const onSubmit = (data: LoginPayload) => {
+  const handleLogin = (data: LoginPayload) => {
     login(data.name);
     navigate('/users');
   };
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleLogin)}
       style={{
         maxWidth: '350px',
         margin: '5rem auto',
@@ -42,7 +42,6 @@ export const Login = () => {
     >
       <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h2>
       <TextField name="name" control={control} label="Username" type="text" />
-      <span>ahoj</span>
       <TextField name="password" control={control} label="Password" type="password" />
       <button
         type="submit"
@@ -52,7 +51,7 @@ export const Login = () => {
           marginTop: '1rem',
           border: 'none',
           borderRadius: '4px',
-          background: '#007bff',
+          backgroundColor: '#007bff',
           color: 'white',
           fontSize: '16px',
           cursor: 'pointer',
