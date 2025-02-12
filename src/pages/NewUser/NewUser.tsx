@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ApiError } from '../../errors/apiErrors';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { InputField } from '../../components/InputField';
+import { TextField } from '../../components/TextField';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -45,8 +45,8 @@ export const NewUser = () => {
       }}
     >
       <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Add new user</h2>
-      <InputField name="name" control={control} label="Name" type="text" />
-      <InputField name="email" control={control} label="Email" type="email" />
+      <TextField name="name" control={control} label="Name" type="text" />
+      <TextField name="email" control={control} label="Email" type="email" />
       <button
         type="submit"
         disabled={mutation.isPending}
