@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getUsers } from '../../api/usersApi';
-
+import Cookies from 'js-cookie';
 export const UsersList = () => {
   const {
     data: users,
@@ -10,7 +10,7 @@ export const UsersList = () => {
   } = useQuery({
     queryKey: ['users'],
     queryFn: getUsers,
-    enabled: !!localStorage.getItem('user'),
+    enabled: !!Cookies.get('user'),
   });
 
   switch (true) {
