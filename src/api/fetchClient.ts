@@ -5,10 +5,11 @@ export const fetchClient = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
 
   if (!response.ok) {
+    const error = new ApiError(`HTTP error! Status: ${response.status}`, response.status);
     if (response.status === 404) {
-      throw new NotFoundError('404 - Page not found');
+      throw new NotFoundError(error.message);
     }
-    throw new ApiError(`HTTP error! Status: ${response.status}`, response.status);
+    throw error;
   }
 
   return response.json();
