@@ -10,8 +10,14 @@ const schema = z.object({
   email: z.string().email('Invalid email address'),
 });
 
+export type LoginPayload = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export const NewUser = () => {
-  const { control, handleSubmit, reset } = useForm({
+  const { control, handleSubmit, reset } = useForm<LoginPayload>({
     resolver: zodResolver(schema),
     defaultValues: { name: '', email: '', password: '' },
   });
