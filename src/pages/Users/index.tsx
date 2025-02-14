@@ -1,17 +1,25 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { UsersList } from './UsersList';
 import { useAuth } from '../../context/useAuth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AuthContextType } from '../../context/AuthContext';
 
 export const Users = () => {
-  const { user, logout } = useAuth();
+  const getAuth = useAuth();
+  const [auth, setAuth] = useState<AuthContextType | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
+    getAuth().then(setAuth);
+  }, [getAuth]);
+
+  useEffect(() => {
+    if (auth && !auth.user) {
       navigate('/login');
     }
-  }, [user, navigate]);
+  }, [auth, navigate]);
+
+  if (!auth) return <p>Loading...</p>;
 
   return (
     <>
@@ -24,8 +32,8 @@ export const Users = () => {
           margin: '20px 50px 0 0',
         }}
       >
-        <span style={{ fontWeight: 'bold', color: 'black' }}>{user}</span>
-        <Link to="/login" onClick={logout} style={{ textDecoration: 'underline' }}>
+        <span style={{ fontWeight: 'bold', color: 'black' }}>{auth.user}</span>
+        <Link to="/login" onClick={auth.logout} style={{ textDecoration: 'underline' }}>
           Logout
         </Link>
       </header>

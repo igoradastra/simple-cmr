@@ -4,5 +4,11 @@ import { AuthContext } from './AuthContext';
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within AuthProvider');
-  return context;
+
+  const asyncFunction = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    return context;
+  };
+
+  return asyncFunction;
 };

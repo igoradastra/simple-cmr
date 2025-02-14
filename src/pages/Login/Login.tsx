@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField } from '../../components/TextField';
+import { useEffect, useState } from 'react';
+import { AuthContextType } from '../../context/AuthContext';
 
 const loginSchema = z.object({
   name: z.string().min(1, 'Username is required'),
@@ -16,7 +18,13 @@ export type LoginPayload = {
 };
 
 export const Login = () => {
-  const { login } = useAuth();
+  const getAuth = useAuth();
+  const [auth, setAuth] = useState<AuthContextType | null>(null);
+
+  useEffect(() => {
+    getAuth().then(setAuth);
+  }, [getAuth]);
+
   const navigate = useNavigate();
   const { control, handleSubmit } = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
@@ -24,9 +32,11 @@ export const Login = () => {
   });
 
   const handleLogin = (data: LoginPayload) => {
-    login(data.name);
+    auth?.login(data.name);
     navigate('/users');
   };
+
+  if (!auth) return <p>Loading...</p>;
 
   return (
     <form
@@ -42,6 +52,7 @@ export const Login = () => {
     >
       <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h2>
       <TextField name="name" control={control} label="Username" type="text" />
+      <TextField name="name" control={control} label="Username another" type="text" />
       <TextField name="password" control={control} label="Password" type="password" />
       <button
         type="submit"
