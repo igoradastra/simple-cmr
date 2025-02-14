@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getUsers } from '../../api/usersApi';
 import Cookies from 'js-cookie';
+import { getUsers } from '../../api/users';
 export const UsersList = () => {
   const {
     data: users,

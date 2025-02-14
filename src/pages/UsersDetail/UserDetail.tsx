@@ -1,6 +1,6 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getUser } from '../../api/usersApi';
+import { getUser } from '../../api/users';
 
 export const UserDetail = () => {
   const location = useLocation();
