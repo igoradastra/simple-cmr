@@ -38,9 +38,11 @@ export const Users = () => {
         </Link>
       </header>
       <UsersList />
-      <Link to="/new-user" style={{ display: 'block', marginLeft: '40px' }}>
-        Add new user
-      </Link>
+      {auth && (
+        <Link to="/new-user" style={{ display: 'block', marginLeft: '40px' }}>
+          Add new user
+        </Link>
+      )}
     </>
   );
 };

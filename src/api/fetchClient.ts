@@ -1,16 +1,22 @@
 import { ApiError } from '../errors/apiErrors';
 import { NotFoundError } from '../errors/notFoundErrors';
 
-export const fetchClient = async <T>(url: string): Promise<T> => {
-  const response = await fetch(url);
+export const fetchClient = async <T>(
+  url: string,
+  { method, body, headers }: { method: string; body?: string; headers: { 'Content-Type': string } }
+): Promise<T> => {
+  const response = await fetch(url, {
+    method,
+    body,
+    headers,
+  });
 
   if (!response.ok) {
-    const error = new ApiError(`HTTP error! Status: ${response.status}`, response.status);
     if (response.status === 404) {
-      throw new NotFoundError(error.message);
+      throw new NotFoundError('User not found');
     }
-    throw error;
+    throw new ApiError('Network response was not ok', response.status);
   }
 
-  return response.json();
+  return response.json() as Promise<T>;
 };

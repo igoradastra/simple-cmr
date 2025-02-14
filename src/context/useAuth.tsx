@@ -6,7 +6,7 @@ export const useAuth = () => {
   if (!context) throw new Error('useAuth must be used within AuthProvider');
 
   const asyncFunction = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     return context;
   };
 

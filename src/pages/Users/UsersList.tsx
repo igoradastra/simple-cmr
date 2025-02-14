@@ -22,6 +22,10 @@ export const UsersList = () => {
       break;
   }
 
+  if (!Cookies.get('user')) {
+    return <p>Please log in to view users</p>;
+  }
+
   return (
     <>
       <header style={{ display: 'flex', justifyContent: 'center' }}>
