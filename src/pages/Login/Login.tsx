@@ -56,6 +56,7 @@ export const Login = () => {
       <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h2>
       <TextField name="name" control={control} label="Username" type="text" />
       <TextField name="password" control={control} label="Password" type="password" />
+      <TextField name="name" control={control} label="Username another" type="text" />
       <Checkbox name="rememberMe" control={control} label="Remember me" />
       <button
         type="submit"
