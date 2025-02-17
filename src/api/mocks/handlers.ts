@@ -1,59 +1,36 @@
 import { http, HttpResponse } from 'msw';
 import { mockUsers } from './mockData';
+import { User } from '../types/Users';
 
 export const handlers = [
-  http.get('/api/users', () => {
-    return HttpResponse.json(mockUsers);
-  }),
+  http.get('/api/users', () => HttpResponse.json(mockUsers)),
 
   http.get('/api/users/:id', ({ params }) => {
-    const { id } = params;
-    const user = mockUsers.find((user) => user.id === Number(id));
-
-    if (!user) {
-      return new HttpResponse(null, { status: 404 });
-    }
-
-    return HttpResponse.json(user);
+    const user = mockUsers.find(({ id }) => id === Number(params.id));
+    return user ? HttpResponse.json(user) : new HttpResponse(null, { status: 404 });
   }),
 
   http.post('/api/users', async ({ request }) => {
     const newUser = await request.json();
-    const createdUser = {
-      id: mockUsers.length + 1,
-      ...newUser,
-    };
-
+    const createdUser: User = { ...(newUser as User), id: mockUsers.length + 1 };
     mockUsers.push(createdUser);
-
     return HttpResponse.json(createdUser, { status: 201 });
   }),
 
   http.put('/api/users/:id', async ({ params, request }) => {
-    const { id } = params;
-    const existingUser = mockUsers.find((user) => user.id === Number(id));
-
-    if (!existingUser) {
-      return new HttpResponse(null, { status: 404 });
-    }
+    const existingUser = mockUsers.find(({ id }) => id === Number(params.id));
+    if (!existingUser) return new HttpResponse(null, { status: 404 });
 
     const updates = await request.json();
-    const updatedUser = {
-      ...existingUser,
-      ...updates,
-    };
-
-    return HttpResponse.json(updatedUser);
+    Object.assign(existingUser, updates);
+    return HttpResponse.json(existingUser);
   }),
 
   http.delete('/api/users/:id', ({ params }) => {
-    const { id } = params;
-    const user = mockUsers.find((user) => user.id === Number(id));
+    const userIndex = mockUsers.findIndex(({ id }) => id === Number(params.id));
+    if (userIndex === -1) return new HttpResponse(null, { status: 404 });
 
-    if (!user) {
-      return new HttpResponse(null, { status: 404 });
-    }
-
-    return HttpResponse.json({ message: `User ${id} deleted successfully` });
+    mockUsers.splice(userIndex, 1);
+    return HttpResponse.json({ message: `User ${params.id} deleted successfully` });
   }),
 ];
