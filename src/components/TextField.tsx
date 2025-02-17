@@ -24,7 +24,7 @@ export const TextField = <T extends FieldValues>({ name: fieldName, control, lab
   return (
     <p style={{ border: 'none', margin: 0, padding: 0 }}>
       <label htmlFor={uid} style={{ display: 'block', marginLeft: '0.5rem', marginTop: '1rem' }}>
-        {label}:
+        {label}
       </label>
       <input
         {...field}

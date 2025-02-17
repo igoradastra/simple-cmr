@@ -1,12 +1,19 @@
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import { getUsers } from '../../api/users';
+import { deleteUser, getUsers, updateUser } from '../../api/users';
 import { useState, useEffect } from 'react';
 import { TextField } from '../../components/TextField';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { User } from '../../api/types/Users';
+
+interface FormData {
+  name: string;
+}
 
 export const UsersList = () => {
+  const queryClient = useQueryClient();
+
   const {
     data: users,
     isLoading,
@@ -17,8 +24,22 @@ export const UsersList = () => {
     enabled: !!Cookies.get('user'),
   });
 
+  const { mutate: deleteUserMutation } = useMutation({
+    mutationFn: (id: string) => deleteUser(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+
+  const { mutate: updateUserMutation } = useMutation({
+    mutationFn: (user: User) => updateUser(`${user.id}`, user),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
-  const { control, setValue } = useForm();
+  const { control, setValue, handleSubmit } = useForm<FormData>();
 
   useEffect(() => {
     if (editingUserId !== null) {
@@ -28,6 +49,20 @@ export const UsersList = () => {
       }
     }
   }, [editingUserId, users, setValue]);
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    if (editingUserId !== null) {
+      const userToUpdate = users?.find((user) => user.id === editingUserId);
+      if (userToUpdate) {
+        const updatedUser: User = {
+          ...userToUpdate,
+          name: data.name,
+        };
+        updateUserMutation(updatedUser);
+        setEditingUserId(null);
+      }
+    }
+  };
 
   switch (true) {
     case isLoading:
@@ -71,7 +106,21 @@ export const UsersList = () => {
             }}
           >
             {editingUserId === user.id ? (
-              <TextField control={control} name="name" label={''} type={'text'} />
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <TextField control={control} name="name" label={''} type={'text'} />
+                <button
+                  type="submit"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    textDecoration: 'underline',
+                    color: '#646cff',
+                  }}
+                >
+                  Save
+                </button>
+              </form>
             ) : (
               <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <strong>{user.name}</strong>
@@ -90,26 +139,9 @@ export const UsersList = () => {
                       color: '#646cff',
                     }}
                     onClick={(e) => {
-                      e.currentTarget.style.outline = 'none';
+                      e.preventDefault();
                       setEditingUserId(null);
                     }}
-                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
-                  >
-                    OK
-                  </button>
-                  <button
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      textDecoration: 'underline',
-                      color: '#646cff',
-                    }}
-                    onClick={(e) => {
-                      e.currentTarget.style.outline = 'none';
-                      setEditingUserId(null);
-                    }}
-                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
                   >
                     Cancel
                   </button>
@@ -124,11 +156,7 @@ export const UsersList = () => {
                       textDecoration: 'underline',
                       color: '#646cff',
                     }}
-                    onClick={(e) => {
-                      e.currentTarget.style.outline = 'none';
-                      setEditingUserId(user.id);
-                    }}
-                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+                    onClick={() => setEditingUserId(user.id)}
                   >
                     Edit
                   </button>
@@ -140,11 +168,7 @@ export const UsersList = () => {
                       textDecoration: 'underline',
                       color: '#646cff',
                     }}
-                    onClick={(e) => {
-                      e.currentTarget.style.outline = 'none';
-                      setEditingUserId(null);
-                    }}
-                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+                    onClick={() => deleteUserMutation(`${user.id}`)}
                   >
                     Remove
                   </button>
