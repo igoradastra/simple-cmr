@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { getUsers } from '../../api/users';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { TextField } from '../../components/TextField';
+import { useForm } from 'react-hook-form';
+
 export const UsersList = () => {
   const {
     data: users,
@@ -15,6 +18,16 @@ export const UsersList = () => {
   });
 
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
+  const { control, setValue } = useForm();
+
+  useEffect(() => {
+    if (editingUserId !== null) {
+      const user = users?.find((user) => user.id === editingUserId);
+      if (user) {
+        setValue('name', user.name);
+      }
+    }
+  }, [editingUserId, users, setValue]);
 
   switch (true) {
     case isLoading:
@@ -57,9 +70,14 @@ export const UsersList = () => {
               maxWidth: '20%',
             }}
           >
-            <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <strong>{user.name}</strong>
-            </Link>
+            {editingUserId === user.id ? (
+              <TextField control={control} name="name" label={''} type={'text'} />
+            ) : (
+              <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <strong>{user.name}</strong>
+              </Link>
+            )}
+
             <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
               {editingUserId === user.id ? (
                 <>
