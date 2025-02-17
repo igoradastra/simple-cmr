@@ -6,15 +6,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField } from '../../components/TextField';
 import { useEffect, useState } from 'react';
 import { AuthContextType } from '../../context/AuthContext';
+import { Checkbox } from '../../components/Checkbox';
 
 const loginSchema = z.object({
   name: z.string().min(1, 'Username is required'),
   password: z.string().min(4, 'Password is required'),
+  rememberMe: z.boolean().optional(),
 });
 
 export type LoginPayload = {
   name: string;
   password: string;
+  rememberMe?: boolean;
 };
 
 export const Login = () => {
@@ -28,7 +31,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const { control, handleSubmit } = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { name: '', password: '' },
+    defaultValues: { name: '', password: '', rememberMe: false },
   });
 
   const handleLogin = (data: LoginPayload) => {
@@ -52,8 +55,8 @@ export const Login = () => {
     >
       <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h2>
       <TextField name="name" control={control} label="Username" type="text" />
-      <TextField name="name" control={control} label="Username another" type="text" />
       <TextField name="password" control={control} label="Password" type="password" />
+      <Checkbox name="rememberMe" control={control} label="Remember me" />
       <button
         type="submit"
         style={{
