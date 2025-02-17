@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { getUsers } from '../../api/users';
+import { useState } from 'react';
 export const UsersList = () => {
   const {
     data: users,
@@ -12,6 +13,8 @@ export const UsersList = () => {
     queryFn: getUsers,
     enabled: !!Cookies.get('user'),
   });
+
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
   switch (true) {
     case isLoading:
@@ -58,32 +61,77 @@ export const UsersList = () => {
               <strong>{user.name}</strong>
             </Link>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
-              <button
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  textDecoration: 'underline',
-                  color: '#646cff',
-                }}
-                onClick={(e) => (e.currentTarget.style.outline = 'none')}
-                onFocus={(e) => (e.currentTarget.style.outline = 'none')}
-              >
-                Edit
-              </button>
-              <button
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  textDecoration: 'underline',
-                  color: '#646cff',
-                }}
-                onClick={(e) => (e.currentTarget.style.outline = 'none')}
-                onFocus={(e) => (e.currentTarget.style.outline = 'none')}
-              >
-                Remove
-              </button>
+              {editingUserId === user.id ? (
+                <>
+                  <button
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      textDecoration: 'underline',
+                      color: '#646cff',
+                    }}
+                    onClick={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                      setEditingUserId(null);
+                    }}
+                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+                  >
+                    OK
+                  </button>
+                  <button
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      textDecoration: 'underline',
+                      color: '#646cff',
+                    }}
+                    onClick={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                      setEditingUserId(null);
+                    }}
+                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      textDecoration: 'underline',
+                      color: '#646cff',
+                    }}
+                    onClick={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                      setEditingUserId(user.id);
+                    }}
+                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      textDecoration: 'underline',
+                      color: '#646cff',
+                    }}
+                    onClick={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                      setEditingUserId(null);
+                    }}
+                    onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+                  >
+                    Remove
+                  </button>
+                </>
+              )}
             </div>
           </li>
         ))}
