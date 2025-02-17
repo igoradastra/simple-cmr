@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { TextField } from '../../components/TextField';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { User } from '../../api/types/Users';
+import { TextLinkButton } from '../../components/TextLinkButton';
 
 interface FormData {
   name: string;
@@ -108,18 +109,16 @@ export const UsersList = () => {
             {editingUserId === user.id ? (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField control={control} name="name" label={''} type={'text'} />
-                <button
-                  type="submit"
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    textDecoration: 'underline',
-                    color: '#646cff',
-                  }}
-                >
-                  Save
-                </button>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+                  <TextLinkButton label="Save" type="submit" />
+                  <TextLinkButton
+                    label="Cancel"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEditingUserId(null);
+                    }}
+                  />
+                </div>
               </form>
             ) : (
               <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -129,49 +128,11 @@ export const UsersList = () => {
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
               {editingUserId === user.id ? (
-                <>
-                  <button
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      textDecoration: 'underline',
-                      color: '#646cff',
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setEditingUserId(null);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </>
+                <></>
               ) : (
                 <>
-                  <button
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      textDecoration: 'underline',
-                      color: '#646cff',
-                    }}
-                    onClick={() => setEditingUserId(user.id)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      textDecoration: 'underline',
-                      color: '#646cff',
-                    }}
-                    onClick={() => deleteUserMutation(`${user.id}`)}
-                  >
-                    Remove
-                  </button>
+                  <TextLinkButton label="Edit" onClick={() => setEditingUserId(user.id)} />
+                  <TextLinkButton label="Remove" onClick={() => deleteUserMutation(`${user.id}`)} />
                 </>
               )}
             </div>
