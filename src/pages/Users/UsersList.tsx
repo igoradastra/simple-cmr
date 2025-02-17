@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import { deleteUser, getUsers, updateUser } from '../../api/users';
-import { useState, useEffect } from 'react';
-import { TextField } from '../../components/TextField';
+import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { deleteUser, getUsers, updateUser } from '../../api/users';
 import { User } from '../../api/types/Users';
+import { TextField } from '../../components/TextField';
 import { TextLinkButton } from '../../components/TextLinkButton';
 
 interface FormData {
@@ -14,9 +14,11 @@ interface FormData {
 
 export const UsersList = () => {
   const queryClient = useQueryClient();
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
+  const { control, handleSubmit, setValue } = useForm<FormData>();
 
   const {
-    data: users,
+    data: users = [],
     isLoading,
     error,
   } = useQuery({
@@ -27,56 +29,32 @@ export const UsersList = () => {
 
   const { mutate: deleteUserMutation } = useMutation({
     mutationFn: (id: string) => deleteUser(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
   });
 
   const { mutate: updateUserMutation } = useMutation({
     mutationFn: (user: User) => updateUser(`${user.id}`, user),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
   });
 
-  const [editingUserId, setEditingUserId] = useState<number | null>(null);
-  const { control, setValue, handleSubmit } = useForm<FormData>();
-
-  useEffect(() => {
-    if (editingUserId !== null) {
-      const user = users?.find((user) => user.id === editingUserId);
-      if (user) {
-        setValue('name', user.name);
-      }
-    }
-  }, [editingUserId, users, setValue]);
-
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    if (editingUserId !== null) {
-      const userToUpdate = users?.find((user) => user.id === editingUserId);
-      if (userToUpdate) {
-        const updatedUser: User = {
-          ...userToUpdate,
-          name: data.name,
-        };
-        updateUserMutation(updatedUser);
-        setEditingUserId(null);
-      }
-    }
+  const onEdit = (id: number) => {
+    setEditingUserId(id);
+    const user = users.find((u) => u.id === id);
+    if (user) setValue('name', user.name);
   };
 
-  switch (true) {
-    case isLoading:
-      return <p style={{ textAlign: 'center' }}>Loading...</p>;
-    case !!error:
-      return <p style={{ textAlign: 'center', color: 'red' }}>Error: {error.message}</p>;
-    default:
-      break;
-  }
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    if (!editingUserId) return;
+    const userToUpdate = users.find((u) => u.id === editingUserId);
+    if (!userToUpdate) return;
 
-  if (!Cookies.get('user')) {
-    return <p>Please log in to view users</p>;
-  }
+    updateUserMutation({ ...userToUpdate, name: data.name });
+    setEditingUserId(null);
+  };
+
+  if (!Cookies.get('user')) return <p>Please log in to view users</p>;
+  if (isLoading) return <p style={{ textAlign: 'center' }}>Loading...</p>;
+  if (error) return <p style={{ textAlign: 'center', color: 'red' }}>Error: {error.message}</p>;
 
   return (
     <>
@@ -92,7 +70,7 @@ export const UsersList = () => {
           padding: '0 2rem',
         }}
       >
-        {users?.map((user) => (
+        {users.map((user) => (
           <li
             key={user.id}
             style={{
@@ -108,34 +86,23 @@ export const UsersList = () => {
           >
             {editingUserId === user.id ? (
               <form onSubmit={handleSubmit(onSubmit)}>
-                <TextField control={control} name="name" label={''} type={'text'} />
+                <TextField control={control} name="name" label="" type="text" />
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
                   <TextLinkButton label="Save" type="submit" />
-                  <TextLinkButton
-                    label="Cancel"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setEditingUserId(null);
-                    }}
-                  />
+                  <TextLinkButton label="Cancel" onClick={() => setEditingUserId(null)} />
                 </div>
               </form>
             ) : (
-              <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <strong>{user.name}</strong>
-              </Link>
-            )}
-
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
-              {editingUserId === user.id ? (
-                <></>
-              ) : (
-                <>
-                  <TextLinkButton label="Edit" onClick={() => setEditingUserId(user.id)} />
+              <>
+                <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <strong>{user.name}</strong>
+                </Link>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+                  <TextLinkButton label="Edit" onClick={() => onEdit(user.id)} />
                   <TextLinkButton label="Remove" onClick={() => deleteUserMutation(`${user.id}`)} />
-                </>
-              )}
-            </div>
+                </div>
+              </>
+            )}
           </li>
         ))}
       </ul>
