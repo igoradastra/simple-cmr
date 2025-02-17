@@ -29,7 +29,7 @@ export const UsersList = () => {
   return (
     <>
       <header style={{ display: 'flex', justifyContent: 'center' }}>
-        <h2>Users List</h2>
+        <h2>Users</h2>
       </header>
       <ul
         style={{
@@ -57,6 +57,34 @@ export const UsersList = () => {
             <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
               <strong>{user.name}</strong>
             </Link>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+              <button
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  textDecoration: 'underline',
+                  color: '#646cff',
+                }}
+                onClick={(e) => (e.currentTarget.style.outline = 'none')}
+                onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+              >
+                Edit
+              </button>
+              <button
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  textDecoration: 'underline',
+                  color: '#646cff',
+                }}
+                onClick={(e) => (e.currentTarget.style.outline = 'none')}
+                onFocus={(e) => (e.currentTarget.style.outline = 'none')}
+              >
+                Remove
+              </button>
+            </div>
           </li>
         ))}
       </ul>
