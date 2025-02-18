@@ -36,6 +36,7 @@ export const TextField = <T extends FieldValues>({ name: fieldName, control, lab
           marginLeft: '0.5rem',
           height: '1.5rem',
         }}
+        autoFocus
       />
       {error && <p style={{ color: 'red', margin: '0 0 0.5rem 0' }}>{error.message}</p>}
     </p>
