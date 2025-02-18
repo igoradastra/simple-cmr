@@ -9,7 +9,7 @@ import { EditUserForm } from './UserFormEdit';
 
 export const UsersList = () => {
   const queryClient = useQueryClient();
-  const [editingUserId, setEditingUserId] = useState<number | null>(null);
+  const [editingUserIds, setEditingUserIds] = useState<number[]>([]);
 
   const {
     data: users = [],
@@ -27,15 +27,26 @@ export const UsersList = () => {
   });
 
   const { mutate: updateUserMutation } = useMutation({
-    mutationFn: (user: User) => updateUser(`${user.id}`, user),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-      setEditingUserId(null);
+    mutationFn: (updatedUser: User) => updateUser(`${updatedUser.id}`, updatedUser),
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(['users'], (oldUsers: User[] | undefined) => {
+        if (!oldUsers) return [];
+        return oldUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user));
+      });
+      setEditingUserIds((prev) => prev.filter((id) => id !== updatedUser.id));
     },
   });
 
   const onEdit = (id: number) => {
-    setEditingUserId(id);
+    setEditingUserIds((prev) => {
+      if (prev.includes(id)) return prev.filter((userId) => userId !== id);
+      if (prev.length < 2) return [...prev, id];
+      return prev;
+    });
+  };
+
+  const onCancel = (id: number) => {
+    setEditingUserIds((prev) => prev.filter((userId) => userId !== id));
   };
 
   if (!Cookies.get('user')) return <p>Please log in to view users</p>;
@@ -70,11 +81,11 @@ export const UsersList = () => {
               maxWidth: '20%',
             }}
           >
-            {editingUserId === user.id ? (
+            {editingUserIds.includes(user.id) ? (
               <EditUserForm
                 user={user}
                 onSave={(updatedUser) => updateUserMutation(updatedUser)}
-                onCancel={() => setEditingUserId(null)}
+                onCancel={() => onCancel(user.id)}
               />
             ) : (
               <>
@@ -82,7 +93,11 @@ export const UsersList = () => {
                   <strong>{user.name}</strong>
                 </Link>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-                  <TextLinkButton label="Edit" onClick={() => onEdit(user.id)} />
+                  <TextLinkButton
+                    label="Edit"
+                    onClick={() => onEdit(user.id)}
+                    disabled={editingUserIds.length >= 2 && !editingUserIds.includes(user.id)}
+                  />
                   <TextLinkButton label="Remove" onClick={() => deleteUserMutation(`${user.id}`)} />
                 </div>
               </>
