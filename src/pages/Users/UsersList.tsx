@@ -2,20 +2,14 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
 import { deleteUser, getUsers, updateUser } from '../../api/users';
 import { User } from '../../api/types/Users';
-import { TextField } from '../../components/TextField';
 import { TextLinkButton } from '../../components/TextLinkButton';
-
-interface FormData {
-  name: string;
-}
+import { EditUserForm } from './UserFormEdit';
 
 export const UsersList = () => {
   const queryClient = useQueryClient();
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
-  const { control, handleSubmit, setValue } = useForm<FormData>();
 
   const {
     data: users = [],
@@ -34,22 +28,14 @@ export const UsersList = () => {
 
   const { mutate: updateUserMutation } = useMutation({
     mutationFn: (user: User) => updateUser(`${user.id}`, user),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setEditingUserId(null);
+    },
   });
 
   const onEdit = (id: number) => {
     setEditingUserId(id);
-    const user = users.find((u) => u.id === id);
-    if (user) setValue('name', user.name);
-  };
-
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    if (!editingUserId) return;
-    const userToUpdate = users.find((u) => u.id === editingUserId);
-    if (!userToUpdate) return;
-
-    updateUserMutation({ ...userToUpdate, name: data.name });
-    setEditingUserId(null);
   };
 
   if (!Cookies.get('user')) return <p>Please log in to view users</p>;
@@ -85,13 +71,11 @@ export const UsersList = () => {
             }}
           >
             {editingUserId === user.id ? (
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <TextField control={control} name="name" label="" type="text" />
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-                  <TextLinkButton label="Save" type="submit" />
-                  <TextLinkButton label="Cancel" onClick={() => setEditingUserId(null)} />
-                </div>
-              </form>
+              <EditUserForm
+                user={user}
+                onSave={(updatedUser) => updateUserMutation(updatedUser)}
+                onCancel={() => setEditingUserId(null)}
+              />
             ) : (
               <>
                 <Link to={`/user/${user.id}`} state={{ user }} style={{ textDecoration: 'none', color: 'inherit' }}>
