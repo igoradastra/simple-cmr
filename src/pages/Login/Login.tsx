@@ -7,6 +7,8 @@ import { TextField } from '../../components/TextField';
 import { useEffect, useState } from 'react';
 import { AuthContextType } from '../../context/AuthContext';
 import { Checkbox } from '../../components/Checkbox';
+import { GoogleLogin } from '@react-oauth/google';
+import {jwtDecode} from 'jwt-decode';
 
 const loginSchema = z.object({
   name: z.string().min(1, 'Username is required'),
@@ -22,8 +24,7 @@ export type LoginPayload = {
 
 export const Login = () => {
   const getAuth = useAuth();
-  const [auth, setAuth] = useState<AuthContextType | null>(null);
-
+  const [auth, setAuth] = useState<AuthContextType | null>(null);  
   useEffect(() => {
     getAuth().then((response) => {
       // tu kontrolovt navrat
@@ -76,6 +77,19 @@ export const Login = () => {
       >
         Login
       </button>
+      <p style={{ textAlign: 'center', marginTop: '1rem' }}>or</p>
+      <GoogleLogin 
+        onSuccess={(credentialResponse) => {
+          console.log(credentialResponse)
+          if (credentialResponse.credential) {
+            console.log(jwtDecode(credentialResponse.credential))
+          }
+          navigate('/users');
+        }}
+
+        onError={()=> console.log('Login error')}
+        auto_select={true}
+        />
     </form>
   );
 };
