@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { AuthContextType } from '../../context/AuthContext';
 import { Checkbox } from '../../components/Checkbox';
 import { GoogleLogin } from '@react-oauth/google';
-import {jwtDecode} from 'jwt-decode';
+import {jwtDecode, JwtPayload} from 'jwt-decode';
 
 const loginSchema = z.object({
   name: z.string().min(1, 'Username is required'),
@@ -45,6 +45,7 @@ export const Login = () => {
 
   if (!auth) return <p>Loading...</p>;
 
+
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}
@@ -78,18 +79,18 @@ export const Login = () => {
         Login
       </button>
       <p style={{ textAlign: 'center', marginTop: '1rem' }}>or</p>
-      <GoogleLogin 
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse)
-          if (credentialResponse.credential) {
-            console.log(jwtDecode(credentialResponse.credential))
-          }
+      <GoogleLogin
+      onSuccess={(credentialResponse) => {
+        console.log(credentialResponse)
+        if (credentialResponse.credential) {
+          const decoded = jwtDecode<JwtPayload & { name: string; email: string }>(credentialResponse.credential);
+          auth?.login(decoded.name ?? decoded.email);
           navigate('/users');
+        }
         }}
-
         onError={()=> console.log('Login error')}
         auto_select={true}
-        />
+      />
     </form>
   );
 };
