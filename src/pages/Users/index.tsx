@@ -39,9 +39,15 @@ export const Users = () => {
       </header>
       <UsersList />
       {auth && (
-        <Link to="/new-user" style={{ display: 'block', marginLeft: '40px' }}>
-          Add new user
-        </Link>
+        <>
+          <Link to="/new-user" style={{ display: 'block', marginLeft: '40px' }}>
+            Add new user
+          </Link>
+          <Link to="/users-table" style={{ display: 'block', marginLeft: '40px' }}>
+            Display table
+          </Link>
+        </>
+
       )}
     </>
   );
