@@ -177,66 +177,59 @@ export const UsersTable = () => {
   });
 
   if (!Cookies.get('user')) {
-    return <div style={{ textAlign: 'center', padding: '2rem' }}>Please log in to view users</div>;
+    return <p>Please log in to view users</p>;
   }
 
   if (isLoading) {
-    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>;
+    return <p>Loading...</p>;
   }
 
   if (error) {
-    return (
-      <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
-        Error: {(error as Error).message}
-      </div>
-    );
+    return <p style={{ color: 'red' }}>Error: {(error as Error).message}</p>;
   }
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1 style={{ textAlign: 'center' }}>Users</h1>
+    <section>
+      <h1>Users</h1>
 
-      <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    style={{
-                      borderBottom: '2px solid black',
-                      padding: '8px',
-                      cursor: 'pointer',
-                      backgroundColor: '#f0f0f0'
-                    }}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    <span style={{ paddingLeft: '4px' }}>
-                      {header.column.getIsSorted() ? (header.column.getIsSorted() === 'asc' ? '▲' : '▼') : ''}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                  style={{
+                    borderBottom: '2px solid black',
+                    padding: '8px',
+                    cursor: 'pointer',
+                    backgroundColor: '#f0f0f0'
+                  }}
+                >
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  <span style={{ paddingLeft: '4px' }}>
+                    {header.column.getIsSorted() ? (header.column.getIsSorted() === 'asc' ? '▲' : '▼') : ''}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
 
-          <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id} style={{ borderBottom: '1px solid #ccc' }}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} style={{ padding: '8px', textAlign: 'left' }}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id} style={{ borderBottom: '1px solid #ccc' }}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} style={{ padding: '8px', textAlign: 'left' }}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-
-      </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -292,6 +285,7 @@ export const UsersTable = () => {
       <Link to="/users" style={{ display: 'block', marginTop: '20px' }}>
         {'<- '}Back to user list
       </Link>
-    </div>
+    </section>
   );
 };
+
