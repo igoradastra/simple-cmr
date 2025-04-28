@@ -12,6 +12,7 @@ import {
 import Cookies from 'js-cookie';
 import { deleteUser, getUsers, updateUser } from '../../api/users';
 import { User } from '../../api/types/Users';
+import { Link } from 'react-router-dom';
 
 export const UsersTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -233,9 +234,10 @@ export const UsersTable = () => {
             ))}
           </tbody>
         </table>
+
+
       </div>
 
-      {/* Pagination Controls */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button
@@ -268,6 +270,7 @@ export const UsersTable = () => {
           </button>
         </div>
 
+
         <div>
           Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </div>
@@ -286,6 +289,9 @@ export const UsersTable = () => {
           </select>
         </div>
       </div>
+      <Link to="/users" style={{ display: 'block', marginTop: '20px' }}>
+        {'<- '}Back to user list
+      </Link>
     </div>
   );
 };
