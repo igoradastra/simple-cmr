@@ -22,12 +22,40 @@ export const Users = () => {
     }
   }, [auth, navigate]);
 
-  if (!auth) return <p>Loading...</p>;
+  if (!auth) return <p>{t('Loading')}</p>;
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLang = e.target.value;
-    i18n.changeLanguage(newLang);
+  const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLanguage = event.target.value;
+    i18n.changeLanguage(selectedLanguage);
   };
+
+  const renderUserFeatures = () => {
+    const features = t('UserFeatures', { returnObjects: true });
+    console.log('Features from i18n:', features);
+  
+    const fallbackFeatures = {
+      addUser: i18n.language === 'cz' ? "Možnost přidání nového uživatele" : "Option to add a new user",
+      userList: i18n.language === 'cz' ? "Zobrazení seznamu uživatelů" : "View user list",
+      changeLanguage: i18n.language === 'cz' ? "Změna jazyka aplikace" : "Change application language",
+      logout: i18n.language === 'cz' ? "Odhlášení ze systému" : "Logout from the system"
+    };
+  
+    if (typeof features === 'string') {
+      console.warn('Using fallback features due to i18n configuration issue');
+      return Object.entries(fallbackFeatures).map(([key, value]) => (
+        <li key={key}>{value}</li>
+      ));
+    }
+  
+    if (features && typeof features === 'object' && !Array.isArray(features)) {
+      return Object.entries(features).map(([key, value]) => (
+        <li key={key}>{String(value)}</li>
+      ));
+    }
+  
+    return <li>{t('Loading')}</li>;
+  };
+  
 
   return (
     <>
@@ -52,8 +80,6 @@ export const Users = () => {
           <option value="en">English</option>
           <option value="cz">Čeština</option>
         </select>
-
-
       </header>
 
       <UsersList />
@@ -65,6 +91,9 @@ export const Users = () => {
           <Link to="/users-table" style={{ display: 'block', marginLeft: '40px' }}>
             {t('Display table')}
           </Link>
+          <ul style={{ margin: '40px' }}>
+            {renderUserFeatures()}
+          </ul>
         </>
       )}
     </>

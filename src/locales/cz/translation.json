@@ -1,6 +1,12 @@
 {
-  "Logout": "Odhlásit se",
-  "Add new user": "Přidat nového uživatele",
-  "Display table": "Zobrazit tabulku",
-  "Loading": "Načítání..."
+  "Logout": "Logout",
+  "Add new user": "Add new user",
+  "Display table": "Display table",
+  "Loading": "Loading...",
+  "UserFeatures": {
+    "addUser": "Option to add a new user",
+    "userList": "View user list",
+    "changeLanguage": "Change application language",
+    "logout": "Logout from the system"
+  }
 }
