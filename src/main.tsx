@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/AuthProvider';
 import { worker } from './api/mocks/browser.ts';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import './i18n';
 
 if (process.env.NODE_ENV === 'development') {
   worker.start();

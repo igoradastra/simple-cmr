@@ -1,0 +1,10 @@
+// i18next-parser.config.ts
+module.exports = {
+  locales: ["en", "cz"],
+  defaultNamespace: "translation",
+  output: "src/locales/$LOCALE/translation.json",
+  input: ["src/**/*.{js,jsx,ts,tsx}"],
+  keySeparator: false,
+  namespaceSeparator: false
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiaTE4bmV4dC1wYXJzZXIuY29uZmlnLnRzIl0sCiAgInNvdXJjZXNDb250ZW50IjogWyJtb2R1bGUuZXhwb3J0cyA9IHtcclxuICAgIGxvY2FsZXM6IFsnZW4nLCAnY3onXSwgXHJcbiAgICBkZWZhdWx0TmFtZXNwYWNlOiAndHJhbnNsYXRpb24nLFxyXG4gICAgb3V0cHV0OiAnc3JjL2xvY2FsZXMvJExPQ0FMRS90cmFuc2xhdGlvbi5qc29uJyxcclxuICAgIGlucHV0OiBbJ3NyYy8qKi8qLntqcyxqc3gsdHMsdHN4fSddLFxyXG4gICAga2V5U2VwYXJhdG9yOiBmYWxzZSwgXHJcbiAgICBuYW1lc3BhY2VTZXBhcmF0b3I6IGZhbHNlLCBcclxuICB9O1xyXG4gICJdLAogICJtYXBwaW5ncyI6ICI7QUFBQSxPQUFPLFVBQVU7QUFBQSxFQUNiLFNBQVMsQ0FBQyxNQUFNLElBQUk7QUFBQSxFQUNwQixrQkFBa0I7QUFBQSxFQUNsQixRQUFRO0FBQUEsRUFDUixPQUFPLENBQUMsMEJBQTBCO0FBQUEsRUFDbEMsY0FBYztBQUFBLEVBQ2Qsb0JBQW9CO0FBQ3RCOyIsCiAgIm5hbWVzIjogW10KfQo=
