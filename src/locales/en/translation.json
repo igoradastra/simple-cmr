@@ -2,5 +2,11 @@
   "Logout": "Logout",
   "Add new user": "Add new user",
   "Display table": "Display table",
-  "Loading": "Loading..."
+  "Loading": "Loading...",
+  "UserFeatures": {
+    "addUser": "Option to add a new user",
+    "userList": "View user list",
+    "changeLanguage": "Change application language",
+    "logout": "Logout from the system"
+  }
 }
