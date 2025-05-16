@@ -4,13 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { UsersList } from './UsersList';
 import { useAuth } from '../../context/useAuth';
 import { AuthContextType } from '../../context/AuthContext';
-import { FeaturesSwitch } from '../../components/FeaturesSwitch';
+import { UserTableFeatureSwitch } from '../../components/FeaturesSwitch';
+import { useFeatureFlag } from '../../hooks/useFeatureFlag';
 
 export const Users = () => {
   const getAuth = useAuth();
   const [auth, setAuth] = useState<AuthContextType | null>(null);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const isUserTableEnabled = useFeatureFlag('FEATURE_USER_TABLE');
 
   useEffect(() => {
     getAuth().then(setAuth);
@@ -64,12 +66,18 @@ export const Users = () => {
       <Link to="/new-user" style={{ display: 'block', marginLeft: '40px' }}>
         {t('Add new user')}
       </Link>
-      <Link to="/users-table" style={{ display: 'block', marginLeft: '40px' }}>
-        {t('Display table')}
-      </Link>
+
+      {isUserTableEnabled && (
+        <Link to="/users-table" style={{ display: 'block', marginLeft: '40px' }}>
+          {t('Display table')}
+        </Link>
+      )}
 
       <ul style={{ margin: '40px' }}>{renderUserFeatures()}</ul>
-      <FeaturesSwitch />
+
+      <div style={{ margin: '20px 40px' }}>
+        <UserTableFeatureSwitch />
+      </div>
     </>
   );
 };

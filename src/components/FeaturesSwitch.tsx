@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 
-export const FeaturesSwitch = () => {
+export const UserTableFeatureSwitch = () => {
   const [value, setValue] = useState(
-    import.meta.env.VITE_FEATURE_DISPLAYED === 'true'
+    localStorage.getItem('FEATURE_USER_TABLE') === 'true' ||
+    import.meta.env.VITE_FEATURE_USER_TABLE === 'true'
   );
 
   useEffect(() => {
-    document.cookie = `VITE_FEATURE_DISPLAYED=${value}; path=/; SameSite=Strict`;
+    localStorage.setItem('FEATURE_USER_TABLE', value.toString());
+    document.cookie = `FEATURE_USER_TABLE=${value}; path=/; SameSite=Strict`;
   }, [value]);
 
   return (
-    <label style={{ display: "flex", alignItems: "center" }}>
-        <span style={{ marginLeft: "8px", marginRight: "4px" }}>Features displayed</span>
+    <label style={{ display: "flex", alignItems: "center", margin: "20px 40px" }}>
+      <span style={{ marginRight: "10px" }}>User table feature</span>
       <div
         style={{
           display: "inline-block",
@@ -37,8 +39,6 @@ export const FeaturesSwitch = () => {
           }}
         />
       </div>
-      
     </label>
   );
 };
-

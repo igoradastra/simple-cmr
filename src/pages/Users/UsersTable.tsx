@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createColumnHelper,
@@ -12,9 +12,20 @@ import {
 import Cookies from 'js-cookie';
 import { deleteUser, getUsers, updateUser } from '../../api/users';
 import { User } from '../../api/types/Users';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useFeatureFlag } from '../../hooks/useFeatureFlag';
+
 
 export const UsersTable = () => {
+  const isUserTableEnabled = useFeatureFlag('FEATURE_USER_TABLE');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isUserTableEnabled) {
+      navigate('/users');
+    }
+  }, [isUserTableEnabled, navigate]);
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const [editedValues, setEditedValues] = useState<Partial<User>>({});
@@ -28,7 +39,7 @@ export const UsersTable = () => {
   } = useQuery({
     queryKey: ['users'],
     queryFn: getUsers,
-    enabled: !!Cookies.get('user'),
+    enabled: !!Cookies.get('user') && isUserTableEnabled,
   });
 
   const { mutate: deleteUserMutation } = useMutation({
@@ -176,6 +187,10 @@ export const UsersTable = () => {
     },
   });
 
+  if (!isUserTableEnabled) {
+    return <p>Feature is disabled</p>;
+  }
+
   if (!Cookies.get('user')) {
     return <p>Please log in to view users</p>;
   }
@@ -288,4 +303,3 @@ export const UsersTable = () => {
     </section>
   );
 };
-
