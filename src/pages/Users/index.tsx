@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { UsersList } from './UsersList';
 import { useAuth } from '../../context/useAuth';
 import { AuthContextType } from '../../context/AuthContext';
+import { FeaturesSwitch } from '../../components/FeaturesSwitch';
 
 export const Users = () => {
   const getAuth = useAuth();
@@ -68,6 +69,7 @@ export const Users = () => {
       </Link>
 
       <ul style={{ margin: '40px' }}>{renderUserFeatures()}</ul>
+      <FeaturesSwitch />
     </>
   );
 };
